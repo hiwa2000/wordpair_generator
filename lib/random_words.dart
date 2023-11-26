@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
 class RandomWords extends StatefulWidget {
-  const RandomWords({Key? key}) : super(key: key);
+  const RandomWords({super.key});
 
   @override
   RandomWordsState createState() => RandomWordsState();
@@ -15,13 +15,13 @@ class RandomWordsState extends State<RandomWords> {
   Widget _buildList() {
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
-      itemBuilder: (context, index) {
-        if (index.isOdd) return const Divider();
-        final pairIndex = index ~/ 2;
-        if (pairIndex >= _randomWordPairs.length) {
+      itemBuilder: (context, item) {
+        if (item.isOdd) return const Divider();
+        final index = item ~/ 2;
+        if (index >= _randomWordPairs.length) {
           _randomWordPairs.addAll(generateWordPairs().take(10));
         }
-        return _buildRow(_randomWordPairs[pairIndex]);
+        return _buildRow(_randomWordPairs[index]);
       },
     );
   }
@@ -51,23 +51,21 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   void _pushSaved() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
       final Iterable<ListTile> tiles = _savedWordPairs.map((WordPair pair) {
         return ListTile(
-          title: Text(
-            pair.asPascalCase,
-            style: const TextStyle(fontSize: 16.0),
-          ),
-        );
+            title: Text(
+          pair.asPascalCase,
+          style: const TextStyle(fontSize: 16.0),
+        ));
       });
 
-      final List<Widget> divided = ListTile.divideTiles(
-        context: context,
-        tiles: tiles,
-      ).toList();
-
+      final List<Widget> divided =
+          ListTile.divideTiles(context: context, tiles: tiles).toList();
       return Scaffold(
         appBar: AppBar(title: const Text('Saved WordPairs')),
+       backgroundColor: Color.fromARGB(255, 223, 231, 199),
         body: ListView(
           children: divided,
         ),
@@ -80,11 +78,13 @@ class RandomWordsState extends State<RandomWords> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('WordPair Generator'),
+        backgroundColor: Colors.cyan,
         actions: <Widget>[
-          IconButton(onPressed: _pushSaved, icon: const Icon(Icons.list)),
+          IconButton(onPressed: _pushSaved, icon: const Icon(Icons.list))
         ],
       ),
       body: _buildList(),
+      backgroundColor: Color.fromARGB(255, 146, 181, 242),
     );
   }
 }
